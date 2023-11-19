@@ -9,6 +9,11 @@ import SignUp from "../Pages/SignUp/SignUp";
 import Cart from "../Pages/DashBoard/Cart/Cart";
 import AllUsers from "../Pages/DashBoard/AllUsers/AllUsers";
 import DashBoard from "../Layout/DashBoard";
+import AddItems from "../Pages/DashBoard/AddItems/AddItems";
+import AdminRoute from "./AdminRoute";
+import ManageItem from "../Pages/DashBoard/ManageItem/ManageItem";
+import UpdateItem from "../Pages/DashBoard/UpdateItem/UpdateItem";
+// import PrivateRoute from "./PrivateRoute";
 
 
 export const router = createBrowserRouter([
@@ -17,6 +22,7 @@ export const router = createBrowserRouter([
       element: <Main></Main>,
       errorElement:<ErrorPage></ErrorPage>,
       children:[
+
         {
             path:'/',
             element:<Home></Home>
@@ -41,17 +47,31 @@ export const router = createBrowserRouter([
     },
     {
         path:"dashboard",
-        element: <DashBoard></DashBoard>,
+        element: <DashBoard></DashBoard>, //ata privateRoute korte hobe
         children:[
+            // normal user routes
             {
                 path:"cart",
                 element:<Cart></Cart>
             },
 
-            // admin routes
+            // admin only routes
+            {
+                path:'addItems',
+                element:<AdminRoute><AddItems></AddItems></AdminRoute>
+            },
+            {
+                path:"manageItems",
+                element:<AdminRoute><ManageItem></ManageItem></AdminRoute>
+            },
+            {
+                path:"updateItem/:id",
+                element:<AdminRoute><UpdateItem></UpdateItem></AdminRoute>,
+                loader:({params})=>fetch(`http://localhost:5000/menu/${params.id}`)
+            },
             {
                 path:"users",
-                element:<AllUsers></AllUsers>
+                element:<AdminRoute><AllUsers></AllUsers></AdminRoute>
             },
         ]
     }
